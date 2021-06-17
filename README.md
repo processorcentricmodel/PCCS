@@ -1,4 +1,4 @@
-## Welcome to Processor-Centric Contention-aware Slowdown Model Pages
+## Processor-Centric Contention-aware Slowdown Model 
 
 Processor-centric contention-aware slowdown model is a slowdown model for shared memory SoCs. This page includes the code that is used to construct this model. The code is primarily tested on two devices: (1) NVIDIA Jetson Xavier and (2) Qualcomm Snapdragon 855.
 
