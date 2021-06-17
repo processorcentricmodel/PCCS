@@ -11,7 +11,7 @@ The second step is to analyse the above matrix to determine model parameters by 
 ## Folder Structure 
 
 * corun: The code to generate different bandwidth on processors. 
-* model construction: The code and sample input to construct the model.
+* model_construction: The code and sample input to construct the model.
  
 ## Credits
  
