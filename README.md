@@ -10,7 +10,7 @@ The second step is to analyse the above matrix to determine model parameters by 
 
 ## Pseudo code
 
-![Image text](files/Codeexample.pdf)
+![](files/Codeexample.png)
 
 ## Folder Structure
 
