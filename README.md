@@ -10,7 +10,7 @@ The second step is to analyse the above matrix to determine model parameters by 
 
 ## Pseudo code
 
-![Image text](https://github.com/)
+![Image text](https://github.com/processorcentricmodel/processorcentricmodel.github.io/tree/main/files/Codeexample.pdf)
 
 ## Folder Structure
 
