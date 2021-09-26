@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc,char *argv[])
 {
 		if (argc < 3) {
-				printf("\n Need an input file and an output file\n");
+				printf("\n Need an input file and an output file\n./main inputfile outputfile\n");
 				return 0;
 		}
 		int i, j, k, n, m;
@@ -64,7 +64,7 @@ int main(int argc,char *argv[])
 		// determine the boundary between minor region and normal region
 		// first branch is for no minor region case
 		// second branch is to find the
-		if (achieved_relative_speed[0][m-1] < threshold_minor) {flag_minor = -1; MRMC = -1; normal_BW = 0; printf("here\n");}
+		if (achieved_relative_speed[0][m-1] < threshold_minor) {flag_minor = -1; MRMC = -1; normal_BW = 0;}
 		else
 		{
 				double reduction = min(100 - achieved_relative_speed[0][m-1], 95.0);
@@ -73,12 +73,11 @@ int main(int argc,char *argv[])
 				{
 						if (reduction * 2 < (100-achieved_relative_speed[i][m-1])) break;
 				}
-				normal_boundary = i; normal_BW = standaloneBW[i]; MRMC = 100- achieved_relative_speed[i-1][m-1];
+				normal_boundary = i; normal_BW = standaloneBW[i-1]; MRMC = 100- achieved_relative_speed[i-1][m-1];
 				for (j = 0; j < m; ++j)
 				{
 						if ((100-achieved_relative_speed[i][j]) >= reduction * 2) break;
 				}
-				TBWDC = standaloneBW[i]+externalBW[j];
 
 				for (k = i; k < n; ++k)
 				{
@@ -86,6 +85,19 @@ int main(int argc,char *argv[])
 				}
 				if (k == n) {flag_intensive = -1; intensive_BW=PBW; intensive_boundary=n;}
 				else { intensive_BW=standaloneBW[k]; intensive_boundary = k;}
+
+				double sum = 0;
+				for (i = normal_boundary; i < intensive_boundary; ++i)
+				{
+						for (j = 0; j < m; ++j)
+						{
+								if ((100-achieved_relative_speed[i][j]) >= reduction * 2) break;
+						}
+						sum = sum + standaloneBW[i]+externalBW[j];
+				}
+				TBWDC = sum/(intensive_boundary-normal_boundary);
+
+
 				vector <int> balancepoints(m,0);
 				for (i = normal_boundary; i < intensive_boundary; ++i)
 				{
@@ -96,21 +108,21 @@ int main(int argc,char *argv[])
 								{
 										cur = (achieved_relative_speed[i][j-1]-achieved_relative_speed[i][j])/(externalBW[j]-externalBW[j-1]);
 										if (cnt != 0) {
-												if (cur * 3 < sum/cnt) break;
+												if (cur * 3 < sum/cnt)  {break;}
 										}
 										sum+= cur; cnt++;
 								}
 						}
-						balancepoints[j]++;
+						balancepoints[j+1]++;
 				}
-				double sum = 0.0; int cnt = 0;
+				sum = 0.0; int cnt = 0;
 				for (j = 1; j < m; ++j)
 						sum+=balancepoints[j]*externalBW[j];
 				CBP=sum/(intensive_boundary - normal_boundary+1);
 				double rate_sum=0.0; int rate_cnt = 0;
 				for (i = normal_boundary; i < intensive_boundary; ++i)
 						for (j = 1; j < m; ++j)
-								if (standaloneBW[i]+externalBW[j]>=TBWDC && externalBW[j]<=CBP)
+								if (externalBW[j]<=CBP)
 								{
 										rate_sum+=(achieved_relative_speed[i][j-1]-achieved_relative_speed[i][j])/(externalBW[j]-externalBW[j-1]);
 										rate_cnt++;
@@ -124,7 +136,6 @@ int main(int argc,char *argv[])
 		fprintf(output, "intensive BW %lf\n", intensive_BW);
 		fprintf(output, "MRMC %lf\n", MRMC);
 		fprintf(output, "TBWDC %lf\n", TBWDC);
-		fprintf(output, "PBW %lf\n", PBW);
 		fprintf(output, "CBP %lf\n", CBP);
 		fprintf(output, "rate_i %lf\n", rate_i);
 
